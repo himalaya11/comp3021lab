@@ -1,9 +1,10 @@
 package base;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
-public class Folder {
+public class Folder implements Comparable<Folder>{
 
 	private ArrayList<Note> notes;
 	private String name;
@@ -23,6 +24,72 @@ public class Folder {
 
 	public ArrayList<Note> getNotes() {
 		return notes;
+	}
+
+	public void sortNotes(){
+		Collections.sort(notes);
+	}
+
+	public ArrayList<Note> searchNotes(String keywords){
+		String keywordsLower = keywords.toLowerCase();
+		String[] strArr = keywordsLower.split(" or ");
+		String strNew = String.join(",", strArr);
+		String[] arrOfStr = strNew.split(" ");
+		String[][] arrOfStrFinal = new String [arrOfStr.length][];
+		boolean satisfy = false;
+		int satisfyCount = 0;
+		ArrayList<Note> keynote = new ArrayList<Note>();
+		for(int i=0; i < arrOfStr.length; i++){
+			arrOfStrFinal[i] = arrOfStr[i].split(",");
+		}
+		for (Note i: notes){
+			if (i instanceof TextNote){
+				satisfyCount = 0;
+				TextNote textnote = (TextNote) i;
+				String titleLower = textnote.getTitle().toLowerCase();
+				String contentLower = textnote.getContent().toLowerCase();
+				for(int j=0; j < arrOfStr.length; j++){
+					satisfy = false;
+					for(int k=0; k < arrOfStrFinal[j].length; k++){
+						if (titleLower.contains(arrOfStrFinal[j][k]) || contentLower.contains(arrOfStrFinal[j][k])){
+							// System.out.println(arrOfStrFinal[j][k]);
+							satisfy = true;
+						}
+					}
+					if (satisfy){
+						satisfyCount++;
+					}
+				}
+				if (satisfyCount == arrOfStr.length){
+					keynote.add(i);
+				}
+			}
+			else {
+				satisfyCount = 0;
+				String titleLower = i.getTitle().toLowerCase();
+				for(int j=0; j < arrOfStr.length; j++){
+					satisfy = false;
+					for(int k=0; k < arrOfStrFinal[j].length; k++){
+						if (titleLower.contains(arrOfStrFinal[j][k])){
+							// System.out.println(arrOfStrFinal[j][k]);
+							satisfy = true;
+						}
+					}
+					if (satisfy){
+						satisfyCount++;
+					}
+				}
+				if (satisfyCount == arrOfStr.length){
+					keynote.add(i);
+				}
+			}
+		}
+		return keynote;
+	}
+
+	@Override
+	public int compareTo(Folder o){
+		return this.name.compareTo(o.name);
 	}
 
 	@Override
@@ -54,8 +121,4 @@ public class Folder {
 	    }
 		return name + ":" + nText + ":" + nImage;
 	}
-
-
-
-
 }
