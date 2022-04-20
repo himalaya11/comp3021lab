@@ -62,4 +62,8 @@ public class TextNote extends Note{
 		return content;
 	}
 
+	public void setContent(String content) {
+		this.content = content;
+	}
+
 }

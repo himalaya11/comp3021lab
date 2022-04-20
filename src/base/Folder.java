@@ -49,7 +49,10 @@ public class Folder implements Comparable<Folder>, Serializable{
 				satisfyCount = 0;
 				TextNote textnote = (TextNote) i;
 				String titleLower = textnote.getTitle().toLowerCase();
-				String contentLower = textnote.getContent().toLowerCase();
+				String contentLower = "";
+				if (textnote.getContent() != null){
+					contentLower = textnote.getContent().toLowerCase();
+				}
 				for(int j=0; j < arrOfStr.length; j++){
 					satisfy = false;
 					for(int k=0; k < arrOfStrFinal[j].length; k++){
@@ -123,4 +126,20 @@ public class Folder implements Comparable<Folder>, Serializable{
 	    }
 		return name + ":" + nText + ":" + nImage;
 	}
+
+	public boolean removeNotes(String title) {
+		   // TODO
+		   // Given the title of the note, delete it from the folder.
+		   // Return true if it is deleted successfully, otherwise return false.
+			int index = 0;
+			for (Note note: notes){
+				if (note.getTitle().compareTo(title) == 0){
+					notes.remove(index);
+					return true;
+				}
+				index++;
+			}
+			return false;
+		}
+
 }
